@@ -4,9 +4,14 @@ plugins {
 	id 'java'
 }
 
+//buildscript {
+//	apply from: file('gradle/buildsctript.gradle'), to: buildscript
+//
+//}
+
 group = 'com.karel'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '17'
+sourceCompatibility = '8'
 
 repositories {
 	mavenCentral()
