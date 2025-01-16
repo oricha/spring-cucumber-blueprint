@@ -1,17 +1,19 @@
 plugins {
-	id 'org.springframework.boot' version '2.6.7'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+	id 'org.springframework.boot' version '3.1.6' // Use the latest 3.1.x version
+	id 'io.spring.dependency-management' version '1.1.3' // Compatible version
 	id 'java'
 }
 
-//buildscript {
-//	apply from: file('gradle/buildsctript.gradle'), to: buildscript
-//
-//}
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
 
 group = 'com.karel'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '8'
+sourceCompatibility = '17'
 
 repositories {
 	mavenCentral()
@@ -19,11 +21,11 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter'
-	implementation 'io.cucumber:cucumber-core:7.3.2'
-	implementation 'io.cucumber:cucumber-junit:7.3.2'
-	implementation 'io.cucumber:cucumber-java:7.3.2'
-	implementation 'io.cucumber:cucumber-spring:7.3.2'
-	implementation 'commons-io:commons-io:2.11.0'
+	implementation 'io.cucumber:cucumber-core:7.20.1'
+	implementation 'io.cucumber:cucumber-junit:7.20.1'
+	implementation 'io.cucumber:cucumber-java:7.20.1'
+	implementation 'io.cucumber:cucumber-spring:7.20.1'
+	implementation 'commons-io:commons-io:2.18.0'
 
 
 	implementation 'org.springframework.boot:spring-boot-starter-web'

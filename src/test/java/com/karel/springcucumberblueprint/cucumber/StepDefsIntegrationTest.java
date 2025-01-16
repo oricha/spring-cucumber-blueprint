@@ -30,7 +30,7 @@ public class StepDefsIntegrationTest extends SpringIntegrationTest {
 
     @Then("^the client receives status code of (\\d+)$")
     public void the_client_receives_status_code_of(int statusCode) throws Throwable {
-        final HttpStatus currentStatusCode = latestResponse.getTheResponse().getStatusCode();
+        final HttpStatus currentStatusCode = HttpStatus.valueOf(latestResponse.getTheResponse().getStatusCode().value());
         assertThat("status code is incorrect : " + latestResponse.getBody(), currentStatusCode.value(), is(statusCode));
     }
 

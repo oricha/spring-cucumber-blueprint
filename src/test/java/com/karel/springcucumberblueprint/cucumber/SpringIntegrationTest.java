@@ -5,12 +5,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.karel.springcucumberblueprint.SpringCucumberBlueprintApplication;
-import com.karel.springcucumberblueprint.cucumber.HeaderSettingRequestCallback;
-import com.karel.springcucumberblueprint.cucumber.ResponseResults;
 import io.cucumber.spring.CucumberContextConfiguration;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.web.client.ResponseErrorHandler;
@@ -20,11 +22,14 @@ import org.springframework.web.client.RestTemplate;
 @SpringBootTest(classes = SpringCucumberBlueprintApplication.class, webEnvironment = WebEnvironment.DEFINED_PORT)
 public class SpringIntegrationTest {
     static ResponseResults latestResponse = null;
-
+    private static final Logger logger = LoggerFactory.getLogger(SpringIntegrationTest.class);
+    @Value("${test.server.url:http://localhost:8082}")
+    private String serverUrl;
     @Autowired
+    @Lazy
     protected RestTemplate restTemplate;
 
-    void executeGet(String url) throws IOException {
+    void executeGet(String url) {
         final Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         final HeaderSettingRequestCallback requestCallback = new HeaderSettingRequestCallback(headers);
@@ -41,6 +46,8 @@ public class SpringIntegrationTest {
     }
 
     void executePost() throws IOException {
+        String url = serverUrl + "/user";
+        logger.info("Executing POST request to {}", url);
         final Map<String, String> headers = new HashMap<>();
         headers.put("Accept", "application/json");
         final HeaderSettingRequestCallback requestCallback = new HeaderSettingRequestCallback(headers);
@@ -52,7 +59,7 @@ public class SpringIntegrationTest {
 
         restTemplate.setErrorHandler(errorHandler);
         latestResponse = restTemplate
-          .execute("http://localhost:8082/user", HttpMethod.POST, requestCallback, response -> {
+          .execute(url, HttpMethod.POST, requestCallback, response -> {
               if (errorHandler.hadError) {
                   return (errorHandler.getResults());
               } else {
@@ -61,7 +68,7 @@ public class SpringIntegrationTest {
           });
     }
 
-    private class ResponseResultErrorHandler implements ResponseErrorHandler {
+    private static class ResponseResultErrorHandler implements ResponseErrorHandler {
         private ResponseResults results = null;
         private Boolean hadError = false;
 
